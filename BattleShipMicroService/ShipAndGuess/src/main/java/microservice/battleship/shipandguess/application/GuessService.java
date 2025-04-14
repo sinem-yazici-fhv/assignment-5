@@ -34,7 +34,6 @@ public class GuessService {
     }
 
     public Map<String, Object> makeGuess(Long playerId, Long gameId, int rowIndex, int col) {
-        // Prüfen, ob der Schuss innerhalb des Spielfelds liegt
         if (rowIndex < 0 || rowIndex >= BoardConfig.BOARD_SIZE || col < 0 || col >= BoardConfig.BOARD_SIZE) {
             System.out.println("Spieler " + playerId + ": Schuss darf nicht außerhalb des Spielfelds sein");
             throw new IllegalArgumentException("Schuss darf nicht außerhalb des Spielfelds sein");
@@ -56,19 +55,14 @@ public class GuessService {
                 hit = true;
                 hitShipId = ship.getId();
 
-                // Get the ship from repository to ensure we have the latest state
                 Ship hitShip = shipRepository.findById(hitShipId).orElseThrow();
 
-                // Set the publisher before marking the hit
                 hitShip.setShipEventPublisher(shipEventPublisher);
 
-                // Ausgabe für Treffer
                 System.out.println("Spieler " + playerId + " hat ein Schiff von Gegner " + opponentId + " getroffen");
 
-                // Mark the hit which may trigger a ship sunk event
                 hitShip.markHit();
 
-                // Prüfen ob alle Schiffe versenkt sind
                 boolean allSunk = true;
                 for (Ship s : opponentShips) {
                     if (!s.isSunk() && !s.getId().equals(hitShipId)) {
@@ -86,12 +80,10 @@ public class GuessService {
             }
         }
 
-        // Ausgabe für Nicht-Treffer
         if (!hit) {
             System.out.println("Spieler " + playerId + " hat kein Schiff des Gegners " + opponentId + " getroffen. Gegner ist dran.");
         }
 
-        // Guess speichern
         Guess guess = new Guess(rowIndex, col, hit, playerDTO.getId(), gameDTO.getId());
         if (hit) {
             guess.setShipId(hitShipId);

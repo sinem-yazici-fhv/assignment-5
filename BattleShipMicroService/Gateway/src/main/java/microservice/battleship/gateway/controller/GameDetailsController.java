@@ -35,7 +35,6 @@ public class GameDetailsController {
         ReactiveCircuitBreaker shipCircuitBreaker =
             circuitBreakerFactory.create("shipAndGuessServiceCircuitBreaker");
 
-        // Get game information
         Mono<Map> gameMono = gameCircuitBreaker.run(
             webClientBuilder.build()
                 .get()
@@ -45,7 +44,6 @@ public class GameDetailsController {
             throwable -> fallbackGameInfo(gameId)
         );
 
-        // Get game status
         Mono<Map> statusMono = gameCircuitBreaker.run(
             webClientBuilder.build()
                 .get()
@@ -67,7 +65,6 @@ public class GameDetailsController {
                 return Mono.just(result);
             }
 
-            // Get player information for all players
             Mono<List<Map>> playersMono = Mono.just(playerIds)
                 .flatMapMany(ids -> Mono.just(ids).flatMapIterable(id -> id))
                 .flatMap(playerId -> playerCircuitBreaker.run(
@@ -80,7 +77,6 @@ public class GameDetailsController {
                 ))
                 .collectList();
 
-            // Get ship information for all players
             Mono<Map<String, List<Map>>> shipsMono = Mono.just(playerIds)
                 .flatMapMany(ids -> Mono.just(ids).flatMapIterable(id -> id))
                 .flatMap(playerId -> shipCircuitBreaker.run(

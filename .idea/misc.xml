@@ -4,6 +4,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/BattleShipMicroService/discovery-server" />
     <file type="web" url="file://$PROJECT_DIR$/BattleShipMicroService/Game" />
+    <file type="web" url="file://$PROJECT_DIR$/BattleShipMicroService/Gateway" />
     <file type="web" url="file://$PROJECT_DIR$/BattleShipMicroService/Player" />
     <file type="web" url="file://$PROJECT_DIR$/BattleShipMicroService/ShipAndGuess" />
   </component>
